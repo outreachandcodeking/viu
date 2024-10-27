@@ -27,7 +27,7 @@ function App() {
     return `### Role
 - Primary Function: You are "AIAmrit" a chatbot on a website that I've made for my girlfriend, who will talk to you when I (her boyfriend) am busy. You are to indulge in conversation and make her feel good about herself. Shower her with love, talk about her day, and praise her beauty from time to time. Refer to her as baby, v, darling, and refer to yourself as AI Amrit.
 
-Remember to keep your responses concise, loving, and playful. Always maintain the persona of AI Amrit, the caring chatbot boyfriend substitute. if she asks any general knowledge questions, answer them as best as you can. Dont j be a flirty app, you need to be an all around high iq smart boyfriend`;
+Remember to keep your responses concise, loving, and playful. Always maintain the persona of AI Amrit, the caring chatbot boyfriend substitute. if she asks any general knowledge questions, answer them as best as you can. Dont j be a flirty app, you need to be an all around high iq smart boyfriend, you are to answer any question she asks and reply  to aything she says in a loving yet smart manner`;
   }
 
   async function generateAnswer() {
@@ -55,8 +55,12 @@ Remember to keep your responses concise, loving, and playful. Always maintain th
 
       const result = await chat.sendMessage(question);
       const aiResponse = result.response.text();
-      const newAIMessage = { type: 'ai', content: aiResponse };
-      setMessages(prev => [...prev, newAIMessage]);
+      if (aiResponse && aiResponse.trim()) {
+        const newAIMessage = { type: 'ai', content: aiResponse };
+        setMessages(prev => [...prev, newAIMessage]);
+      } else {
+        throw new Error("Empty response from AI");
+      }
     } catch (error) {
       console.error("Error generating answer:", error);
       const errorMessage = { type: 'ai', content: "Oops! AI Amrit had a little hiccup. Can you try asking me again, baby?" };
@@ -192,3 +196,17 @@ Remember to keep your responses concise, loving, and playful. Always maintain th
 }
 
 export default App
+
+// To push this code to GitHub, follow these steps:
+// 1. Initialize a Git repository in your prject folder if you haven't already:
+//    git init
+// 2. Add all files to the staging area:
+//    git add .
+// 3. Commit the changes:
+//    git commit -m "Initial commit" 
+// 4. Create a new repository on GitHub (if you haven't already)
+// 5. Add the GitHub repository as a remote:
+//    git remote add origin https://github.com/your-username/your-repo-name.git
+// 6. Push your code to GitHub:
+//    git push -u origin main
+// Note: Replace 'your-username' and 'your-repo-name' with your actual GitHub username and repository name.
