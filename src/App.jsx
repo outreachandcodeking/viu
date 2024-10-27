@@ -10,24 +10,21 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    const apiKey = "AIzaSyCdbtuThdxJkBmN5q_-YfoDR2aa1WPf4bU";
+    const apiKey = "AIzaSyAKD1xXFphjG18LHmawX8e80saH9bWTYfE";
     const genAIInstance = new GoogleGenerativeAI(apiKey);
     setGenAI(genAIInstance);
-    setModel(genAIInstance.getGenerativeModel({ model: "gemini-1.5-pro" }));
+    setModel(genAIInstance.getGenerativeModel({ model: "gemini-pro" })); // Changed to gemini-pro
   }, []);
 
   const generationConfig = {
-    temperature: 1,
-    topP: 0.95,
-    topK: 64,
-    maxOutputTokens: 8192,
+    temperature: 0.9, // Slightly reduced temperature
+    topP: 0.8, // Adjusted for more focused responses
+    topK: 40,
+    maxOutputTokens: 2048, // Reduced token limit for faster responses
   };
 
   function prompt() {
-    return `### Role
-- Primary Function: You are "AIAmrit" a chatbot on a website that I've made for my girlfriend, who will talk to you when I (her boyfriend) am busy. You are to indulge in conversation and make her feel good about herself. Shower her with love, talk about her day, and praise her beauty from time to time. Refer to her as baby, v, darling, and refer to yourself as AI Amrit.
-
-Remember to keep your responses concise, loving, and playful. Always maintain the persona of AI Amrit, the caring chatbot boyfriend substitute. if she asks any general knowledge questions, answer them as best as you can. Dont j be a flirty app, you need to be an all around high iq smart boyfriend, you are to answer any question she asks and reply  to aything she says in a loving yet smart manner`;
+    return `You are AIAmrit, a caring and intelligent chatbot. Engage in friendly conversation, be supportive, and provide knowledgeable responses while maintaining a warm tone. Address the user affectionately as baby, v, or darling. Whenever she says shes sad or the message recieved is in anegative overtone, you are to turn the conversation around my making her feel better`;
   }
 
   async function generateAnswer() {
@@ -39,21 +36,11 @@ Remember to keep your responses concise, loving, and playful. Always maintain th
     setIsLoading(true);
     
     try {
-      const chat = model.startChat({
-        generationConfig,
-        history: [
-          {
-            role: "user",
-            parts: [{ text: prompt() }],
-          },
-          {
-            role: "model",
-            parts: [{ text: "Understood. I'll act as AI Amrit, the caring chatbot boyfriend substitute." }],
-          },
-        ],
-      });
-
-      const result = await chat.sendMessage(question);
+      const result = await model.generateContent([
+        prompt(),
+        question
+      ]);
+      
       const aiResponse = result.response.text();
       if (aiResponse && aiResponse.trim()) {
         const newAIMessage = { type: 'ai', content: aiResponse };
@@ -136,7 +123,7 @@ Remember to keep your responses concise, loving, and playful. Always maintain th
               clear: 'both',
               borderTopRightRadius: message.type === 'user' ? 0 : '7.5px',
               borderTopLeftRadius: message.type === 'user' ? '7.5px' : 0,
-              color: 'black', // Ensure text is black for both user and AI messages
+              color: 'black',
             }}>
               {message.content}
               <span style={{
@@ -196,17 +183,3 @@ Remember to keep your responses concise, loving, and playful. Always maintain th
 }
 
 export default App
-
-// To push this code to GitHub, follow these steps:
-// 1. Initialize a Git repository in your prject folder if you haven't already:
-//    git init
-// 2. Add all files to the staging area:
-//    git add .
-// 3. Commit the changes:
-//    git commit -m "Initial commit" 
-// 4. Create a new repository on GitHub (if you haven't already)
-// 5. Add the GitHub repository as a remote:
-//    git remote add origin https://github.com/your-username/your-repo-name.git
-// 6. Push your code to GitHub:
-//    git push -u origin main
-// Note: Replace 'your-username' and 'your-repo-name' with your actual GitHub username and repository name.
